@@ -6,6 +6,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Usuario getUsuarioById(Long id);
 
-    Usuario getUsuarioByUserId(Long userId);
+    Usuario findUsuarioById(Long id);
+
+    boolean existsByEmail(String email);
+
+
+//    Usuario findById(Long id);
+
+//    Usuario getUsuarioByUserId(Long userId);
 }
