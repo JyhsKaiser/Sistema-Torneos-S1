@@ -21,6 +21,9 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> obtenerUsuarios(){
         List<UsuarioResponseDTO> listaUsuarios = usuarioService.listaDeUsuarios();
+        if (listaUsuarios == null || listaUsuarios.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(listaUsuarios);
     }
 
@@ -28,7 +31,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> getUsuario(@PathVariable Long id){
         UsuarioResponseDTO usuario = usuarioService.getUsuarioById(id);
         if (usuario == null){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(usuario);
     }

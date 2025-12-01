@@ -1,6 +1,8 @@
 package jyhs.s1torneos.service.Implements;
 
 import jakarta.transaction.Transactional;
+import jyhs.s1torneos.client.SancionServiceClient;
+import jyhs.s1torneos.client.dto.SancionDTO;
 import jyhs.s1torneos.dto.JugadorResponseDTO;
 import jyhs.s1torneos.dto.UsuarioResponseDTO;
 import jyhs.s1torneos.entity.Jugador;
@@ -8,6 +10,7 @@ import jyhs.s1torneos.entity.Rol;
 import jyhs.s1torneos.entity.Usuario;
 import jyhs.s1torneos.repository.JugadorRepository;
 import jyhs.s1torneos.repository.UsuarioRepository;
+import jyhs.s1torneos.service.JugadorService;
 import jyhs.s1torneos.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,18 +26,29 @@ public class UsuarioServiceImp implements UsuarioService {
     @Autowired
     private JugadorRepository jugadorRepository;
 
+    @Autowired
+    private SancionServiceClient sancionServiceClient;
+
+    @Autowired
+    private JugadorService jugadorService;
+
     @Override
     @Transactional
     public List<UsuarioResponseDTO> listaDeUsuarios() {
 
         List<Usuario> usuarios = usuarioRepository.findAll();
+        if (usuarios.isEmpty())
+        {
+            return null;
+        }
+
         List<UsuarioResponseDTO> listDTO = new ArrayList<>();
 
         usuarios.forEach(u -> {
             UsuarioResponseDTO dto = convertirUsuarioADTO(u);
 
             Jugador j = jugadorRepository.findById(u.getId()).get();
-            JugadorResponseDTO jugadorDTO = convertirJugadorADTO(j);
+            JugadorResponseDTO jugadorDTO = jugadorService.convertirJugadorADTO(j);
 
             dto.setJugador(jugadorDTO);
             listDTO.add(dto);
@@ -52,7 +66,7 @@ public class UsuarioServiceImp implements UsuarioService {
             return null;
         }
         Jugador j = jugadorRepository.findById(usuario.getId()).get();
-        JugadorResponseDTO jugadorDTO = convertirJugadorADTO(j);
+        JugadorResponseDTO jugadorDTO = jugadorService.convertirJugadorADTO(j);
 
         UsuarioResponseDTO usuarioResponseDTO = convertirUsuarioADTO(usuario);
         usuarioResponseDTO.setJugador(jugadorDTO);
@@ -163,9 +177,12 @@ public class UsuarioServiceImp implements UsuarioService {
 //        jugadorDTO.setUsuarioId(j.getUsuario().getId());
         jugadorDTO.setCartaResponsivaUrl(j.getCartaResponsivaUrl());
         jugadorDTO.setIdentificionUrl(j.getIdentificionUrl());
+        List<SancionDTO> listaSanciones = sancionServiceClient.getListaSancionByjugadorId(j.getId());
+        jugadorDTO.setSanciones(listaSanciones);
         return jugadorDTO;
     }
 
+    @Override
     public UsuarioResponseDTO convertirUsuarioADTO(Usuario u)
     {
         UsuarioResponseDTO dto = new UsuarioResponseDTO();

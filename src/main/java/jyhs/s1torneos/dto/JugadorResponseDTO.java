@@ -17,6 +17,8 @@ public class JugadorResponseDTO {
     private String identificionUrl;
     private String cartaResponsivaUrl;
     private Boolean estado;
+
+    private List<SancionDTO> sanciones;
 //    private Long usuarioId;
 
 //    private List<SancionDTO> listaSanciones;

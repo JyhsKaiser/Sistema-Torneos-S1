@@ -61,15 +61,6 @@ public class JugadorServiceImp implements JugadorService {
         return convertirJugadorADTO(jugador);
     }
 
-//    @Override
-//    Transactional
-//    public List<SancionDTO> obtenerSancionesDeJugador(Long jugadorId) {
-//        List<SancionDTO> listaSancionesDTO = sancionServiceClient.getListaSancionByjugadorId(jugadorId);
-//        if (listaSancionesDTO.isEmpty()) {
-//            return null;
-//        }
-//        return listaSancionesDTO;
-//    }
 
     @Override
     @Transactional
@@ -112,27 +103,27 @@ public class JugadorServiceImp implements JugadorService {
             jugadorExistente.setEstado(patchDTO.getEstado());
         }
 
+
+
         jugadorRepository.save(jugadorExistente);
         // 3. Guardar y devolver la entidad actualizada
         return patchDTO;
     }
 
 
-
-    private JugadorResponseDTO convertirJugadorADTO(Jugador j)
-    {
+    public JugadorResponseDTO convertirJugadorADTO(Jugador j) {
         JugadorResponseDTO jugadorDTO = new JugadorResponseDTO();
         jugadorDTO.setId(j.getId());
         jugadorDTO.setCurp(j.getCurp());
         jugadorDTO.setEstado(j.getEstado());
         jugadorDTO.setFotoUrl(j.getFotoUrl());
         jugadorDTO.setFechaNacimiento(j.getFechaNacimiento());
-//        jugadorDTO.setUsuarioId(j.getUsuario().getId());
         jugadorDTO.setCartaResponsivaUrl(j.getCartaResponsivaUrl());
         jugadorDTO.setIdentificionUrl(j.getIdentificionUrl());
 
+        List<SancionDTO> listaSanciones = sancionServiceClient.getListaSancionByjugadorId(j.getId());
+        jugadorDTO.setSanciones(listaSanciones);
 
         return jugadorDTO;
     }
-
 }

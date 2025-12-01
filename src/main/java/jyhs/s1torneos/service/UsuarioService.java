@@ -11,4 +11,6 @@ public interface UsuarioService {
     UsuarioResponseDTO crearUsuario(Usuario usuario);
     UsuarioResponseDTO modificarUsuario(Usuario u);
     UsuarioResponseDTO eliminarTodosUsuarios();
+    // ------------------------UTILIDADES---------------------
+    UsuarioResponseDTO convertirUsuarioADTO(Usuario u);
 }

@@ -1,5 +1,6 @@
 package jyhs.s1torneos.dto;
 
+import jyhs.s1torneos.client.dto.EstadisticaDTO;
 import jyhs.s1torneos.entity.Jugador;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,7 @@ public class EquipoResponseDTO {
     private String municipio;
     private Long convocatoriaId;
     private Long representanteId;
+
+    private EstadisticaDTO estadisticas;
     private Set<JugadorResponseDTO> jugadores; // <-- ¡CRÍTICO! Usar DTO}
 }

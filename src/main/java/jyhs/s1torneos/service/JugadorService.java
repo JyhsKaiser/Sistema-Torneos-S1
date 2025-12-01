@@ -16,4 +16,7 @@ public interface JugadorService {
     //    List<SancionDTO> obtenerSancionesDeJugador(Long jugadorId);
 
     JugadorResponseDTO actualizarParcialmenteJugador(Jugador j);
+
+    // ------------------------UTILIDADES---------------------
+    JugadorResponseDTO convertirJugadorADTO(Jugador j);
 }

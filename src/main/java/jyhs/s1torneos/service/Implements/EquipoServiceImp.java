@@ -4,7 +4,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jyhs.s1torneos.client.ConvocatoriaServiceClient;
+import jyhs.s1torneos.client.EstadisticaServiceClient;
 import jyhs.s1torneos.client.dto.ConvocatoriaDTO;
+import jyhs.s1torneos.client.dto.EstadisticaDTO;
+import jyhs.s1torneos.client.dto.SancionDTO;
 import jyhs.s1torneos.dto.EquipoAddJugadoresDTO;
 import jyhs.s1torneos.dto.EquipoResponseDTO;
 import jyhs.s1torneos.dto.JugadorResponseDTO;
@@ -36,6 +39,11 @@ public class EquipoServiceImp implements EquipoService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private JugadorRepository jugadorRepository;
+
+    Rol role;
+    @Autowired
+    private EstadisticaServiceClient estadisticaServiceClient;
+
 
     @Override
     @Transactional
@@ -94,7 +102,8 @@ public class EquipoServiceImp implements EquipoService {
             );
         }
         // ---------------------- VALIDACION ----------------------
-        if (equipoRepository.findByRepresentanteId(e.getRepresentanteId()).isPresent()) {
+        if (equipoRepository.findByRepresentanteId(e.getRepresentanteId()).isPresent())
+        {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, // Código 400
                     "El representante con ID " + e.getRepresentanteId() + " ya ha sido asignado a un equipo."
@@ -102,6 +111,12 @@ public class EquipoServiceImp implements EquipoService {
         }
 
         Usuario u = usuarioRepository.getUsuarioById(e.getRepresentanteId());
+        if (u == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El representante con ID " + e.getRepresentanteId() + " no existe!"
+                    );
+        }
         u.setRol(Rol.REPRESENTANTE);
         usuarioRepository.save(u);
 
@@ -243,6 +258,11 @@ public class EquipoServiceImp implements EquipoService {
             equipoExistente.setConvocatoriaId(equipoDetalles.getConvocatoriaId());
         }
 
+        // Campo 'estadisticaId'
+        if (equipoDetalles.getEstadisticaId() != null) {
+            equipoExistente.setEstadisticaId(equipoDetalles.getEstadisticaId());
+        }
+
         // =========================================================
         // LÓGICA PARA LA RELACIÓN MANY-TO-MANY: 'miembros'
         // =========================================================
@@ -301,6 +321,8 @@ public class EquipoServiceImp implements EquipoService {
         nuevoEquipoDTO.setEstatus(equipo.getEstatus());
         nuevoEquipoDTO.setRepresentanteId(equipo.getRepresentanteId());
 
+        EstadisticaDTO estadisticaDTO = estadisticaServiceClient.getEstadisticaById(equipo.getEstadisticaId());
+        nuevoEquipoDTO.setEstadistica(estadisticaDTO);
 
         if (equipo.getJugadores() != null) {
             Set<JugadorResponseDTO> listaJugadoresDTO = new HashSet<>();

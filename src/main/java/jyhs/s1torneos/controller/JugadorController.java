@@ -37,7 +37,7 @@ public class JugadorController {
     }
 
     @PatchMapping
-    ResponseEntity<JugadorResponseDTO> actualizarJugadorSanciones(@RequestBody Jugador jugador)
+    public ResponseEntity<JugadorResponseDTO> actualizarJugador(@RequestBody Jugador jugador)
     {
         JugadorResponseDTO jugadorResponseDTO = jugadorService.actualizarParcialmenteJugador(jugador);
         if (jugador == null){

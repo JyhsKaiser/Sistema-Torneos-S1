@@ -23,6 +23,8 @@ public class Equipo {
     private Long convocatoriaId;
     private Long representanteId;
 
+    private Long estadisticaId;
+
     // Relación Propietaria ManyToMany (1:1..* miembros)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
