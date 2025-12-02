@@ -322,7 +322,7 @@ public class EquipoServiceImp implements EquipoService {
         nuevoEquipoDTO.setRepresentanteId(equipo.getRepresentanteId());
 
         EstadisticaDTO estadisticaDTO = estadisticaServiceClient.getEstadisticaById(equipo.getEstadisticaId());
-        nuevoEquipoDTO.setEstadistica(estadisticaDTO);
+        nuevoEquipoDTO.setEstadisticas(estadisticaDTO);
 
         if (equipo.getJugadores() != null) {
             Set<JugadorResponseDTO> listaJugadoresDTO = new HashSet<>();

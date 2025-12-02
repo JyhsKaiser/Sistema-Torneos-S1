@@ -22,19 +22,19 @@ public class EstadisticaServiceClient {
     public EstadisticaDTO getEstadisticaById(Long estadisticaId) {
         try{
             return webClient.get()
-                    .uri("/{estadisticaId}")
+                    .uri("/{estadisticaId}", estadisticaId)
                     .retrieve()
                     .bodyToMono(EstadisticaDTO.class)
                     .block();
         }catch (WebClientResponseException.NotFound ex){
-            System.err.println("Equipo no encontrado por Id: " + estadisticaId);
+            System.err.println("Estadistica no encontrado por Id: " + estadisticaId);
             return null;
         }
     }
 
 
     public EstadisticaDTO getEstadisticaByIdFallback(Long estadisticaId, Throwable throwable) {
-        System.err.println("🚨 [FALLBACK EQUIPO] Microservicio de Equipos no disponible. Causa: " + throwable.getMessage());
+        System.err.println("🚨 [FALLBACK EQUIPO] Microservicio de Estadistica no disponible. Causa: " + throwable.getMessage());
         return null;
     }
 }
