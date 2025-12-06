@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,9 +37,26 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Usuario usuario)
+    {
+        UsuarioResponseDTO respuesta = usuarioService.obtenerUsuarioPorEmailYContraseña(usuario);
+        if (respuesta == null)
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Usuario no encontrado"
+            );
+//            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(respuesta);
+    }
+
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> postUsuario(@RequestBody Usuario usuario){
         UsuarioResponseDTO saveUsuario = usuarioService.crearUsuario(usuario);
+//        if (saveUsuario == null){
+//            return ResponseEntity.badRequest().build();
+//        }
         return ResponseEntity.status(HttpStatus.CREATED).body(saveUsuario);    //201
     }
 

@@ -24,7 +24,8 @@ public class Jugador {
     private String fotoUrl;
     private String identificionUrl;
     private String cartaResponsivaUrl;
-    private Boolean estado;
+    private Boolean inscrito;
+
 
     @OneToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)

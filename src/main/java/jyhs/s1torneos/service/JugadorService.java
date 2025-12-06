@@ -13,6 +13,8 @@ public interface JugadorService {
 
     JugadorResponseDTO obtenerJugadorPorId(Long id);
 
+    JugadorResponseDTO obtenerJugadorPorCURP(String CURP);
+
     //    List<SancionDTO> obtenerSancionesDeJugador(Long jugadorId);
 
     JugadorResponseDTO actualizarParcialmenteJugador(Jugador j);

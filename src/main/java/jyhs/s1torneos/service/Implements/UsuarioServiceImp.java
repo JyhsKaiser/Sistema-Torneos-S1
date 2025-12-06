@@ -57,6 +57,20 @@ public class UsuarioServiceImp implements UsuarioService {
         return listDTO;
     }
 
+    @Transactional
+    @Override
+    public UsuarioResponseDTO obtenerUsuarioPorEmailYContraseña(Usuario u)
+    {
+        Usuario usuario = usuarioRepository.findUsuarioByEmailAndPassword(u.getEmail(), u.getPassword());
+        if (usuario == null)
+        {
+            return null;
+        }
+        return convertirUsuarioADTO(usuario);
+    }
+
+
+    @Transactional
     @Override
     public UsuarioResponseDTO getUsuarioById(Long id)
     {
@@ -80,6 +94,7 @@ public class UsuarioServiceImp implements UsuarioService {
     {
         // Validación de existencia de email (RNF-07)
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+//            return null;
             throw new RuntimeException("El email " + usuario.getEmail() + " ya está registrado.");
         }
 
@@ -171,7 +186,7 @@ public class UsuarioServiceImp implements UsuarioService {
         JugadorResponseDTO jugadorDTO = new JugadorResponseDTO();
         jugadorDTO.setId(j.getId());
         jugadorDTO.setCurp(j.getCurp());
-        jugadorDTO.setEstado(j.getEstado());
+        jugadorDTO.setInscrito(j.getInscrito());
         jugadorDTO.setFotoUrl(j.getFotoUrl());
         jugadorDTO.setFechaNacimiento(j.getFechaNacimiento());
 //        jugadorDTO.setUsuarioId(j.getUsuario().getId());

@@ -43,6 +43,25 @@ public class NotificacionController {
         return ResponseEntity.notFound().build();
     }
 
+    @PatchMapping
+    public ResponseEntity<?> patchNotificacion(@RequestBody Notificacion notificacion) {
+        NotificacionResponseDTO respuesta = notificacionService.actualizarModificacion(notificacion);
+        if (respuesta == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @DeleteMapping("/borrarNotificaciones/{usuarioId}")
+    public ResponseEntity<NotificacionResponseDTO> borrarNotificacionesUsuario(@PathVariable Long usuarioId) {
+        try {
+            notificacionService.eliminarTodasLasNotificacionesDelUsuario(usuarioId);
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping
     public ResponseEntity<?> deleteNotificacion() {
         try {

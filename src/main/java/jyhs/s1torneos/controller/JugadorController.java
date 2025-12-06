@@ -36,6 +36,16 @@ public class JugadorController {
         return ResponseEntity.ok(jugador);
     }
 
+    @GetMapping("/curp/{curp}")
+    public ResponseEntity<?> getJugadorPorCURP(@PathVariable String curp)
+    {
+        JugadorResponseDTO respuesta = jugadorService.obtenerJugadorPorCURP(curp);
+        if(respuesta == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(respuesta);
+    }
+
     @PatchMapping
     public ResponseEntity<JugadorResponseDTO> actualizarJugador(@RequestBody Jugador jugador)
     {

@@ -3,6 +3,7 @@ package jyhs.s1torneos.controller;
 import jyhs.s1torneos.dto.EquipoAddJugadoresDTO;
 import jyhs.s1torneos.dto.EquipoResponseDTO;
 import jyhs.s1torneos.entity.Equipo;
+import jyhs.s1torneos.entity.Jugador;
 import jyhs.s1torneos.service.EquipoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,16 @@ public class EquipoController {
         }
 //        return ResponseEntity.ok().build();
         return ResponseEntity.ok().body(equipoResponseDTO);
+    }
+
+    @GetMapping("/jugadorId/{jugadorId}")
+    public ResponseEntity<?> getEquipoPorJugadorId(@PathVariable Long jugadorId)
+    {
+        EquipoResponseDTO respuesta = equipoService.obtenerEquipoPorJugadorId(jugadorId);
+        if (respuesta == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(respuesta);
     }
 
     @PostMapping
@@ -64,6 +75,19 @@ public class EquipoController {
 
         // Llama a la lógica de servicio
         Equipo equipoActualizado = equipoService.agregarJugadores(equipoId, dto);
+
+        // Mapea la entidad Equipo a un DTO de respuesta (EquipoResponseDTO)
+        EquipoResponseDTO responseDTO = mapToResponseDTO(equipoActualizado);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+    @PatchMapping("/{equipoId}/jugadores-eliminados")
+    public ResponseEntity<?> deleteEliminarJugadores(
+            @PathVariable Long equipoId,
+            @RequestBody EquipoAddJugadoresDTO dto) {
+
+        // Llama a la lógica de servicio
+        Equipo equipoActualizado = equipoService.eliminarJugadores(equipoId, dto);
 
         // Mapea la entidad Equipo a un DTO de respuesta (EquipoResponseDTO)
         EquipoResponseDTO responseDTO = mapToResponseDTO(equipoActualizado);

@@ -5,6 +5,7 @@ import jyhs.s1torneos.client.ConvocatoriaServiceClient;
 import jyhs.s1torneos.client.SancionServiceClient;
 import jyhs.s1torneos.client.dto.SancionDTO;
 import jyhs.s1torneos.dto.JugadorResponseDTO;
+import jyhs.s1torneos.entity.Equipo;
 import jyhs.s1torneos.entity.Jugador;
 import jyhs.s1torneos.repository.JugadorRepository;
 import jyhs.s1torneos.service.JugadorService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class JugadorServiceImp implements JugadorService {
@@ -61,6 +63,26 @@ public class JugadorServiceImp implements JugadorService {
         return convertirJugadorADTO(jugador);
     }
 
+    @Transactional
+    @Override
+    public JugadorResponseDTO obtenerJugadorPorCURP(String CURP) {
+        Jugador jugador = jugadorRepository.findJugadorsByCurp(CURP);
+        if (jugador == null) {
+            return null;
+        }
+        return convertirJugadorADTO(jugador);
+    }
+
+//    @Transactional
+//    @Override
+//    public Long obtenerEquipoDelJugador(Long jugadorId)
+//    {
+//        Jugador jugador = jugadorRepository.findById(jugadorId);
+//        List<Equipo> equipos = new ArrayList<>(jugador.getEquipos());
+//        System.out.println("equipos: " + equipos.getFirst().getId());
+//        return equipos.getFirst().getId();
+//    }
+
 
     @Override
     @Transactional
@@ -99,8 +121,8 @@ public class JugadorServiceImp implements JugadorService {
         }
 
         // estado (Boolean)
-        if (patchDTO.getEstado() != null) {
-            jugadorExistente.setEstado(patchDTO.getEstado());
+        if (patchDTO.getInscrito() != null) {
+            jugadorExistente.setInscrito(patchDTO.getInscrito());
         }
 
 
@@ -115,7 +137,7 @@ public class JugadorServiceImp implements JugadorService {
         JugadorResponseDTO jugadorDTO = new JugadorResponseDTO();
         jugadorDTO.setId(j.getId());
         jugadorDTO.setCurp(j.getCurp());
-        jugadorDTO.setEstado(j.getEstado());
+        jugadorDTO.setInscrito(j.getInscrito());
         jugadorDTO.setFotoUrl(j.getFotoUrl());
         jugadorDTO.setFechaNacimiento(j.getFechaNacimiento());
         jugadorDTO.setCartaResponsivaUrl(j.getCartaResponsivaUrl());

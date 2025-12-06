@@ -77,6 +77,20 @@ public class EquipoServiceImp implements EquipoService {
         }
         return convertirEquipoADTO(equipo);
     }
+
+    @Transactional
+    @Override
+    public EquipoResponseDTO obtenerEquipoPorJugadorId(Long jugadorId)
+    {
+
+        Optional<Equipo> equipo = equipoRepository.findFirstByJugadoresId(jugadorId);
+        if (equipo.isEmpty())
+        {
+            return null;
+        }
+        return convertirEquipoADTO(equipo.get());
+    }
+
     /**
      * Este metodo solo se usara cuando un jugador cree un nuevo equipo, en tal caso el jugador cambia de rol
      * a representante y tambien se valida que el representante no se registre dos veces a la misma convocatoria
@@ -182,6 +196,29 @@ public class EquipoServiceImp implements EquipoService {
         }
 
         // 4. Guardar el Equipo (Hibernate insertará las filas en equipo_jugadores)
+        return equipoRepository.save(equipo);
+    }
+
+    @Transactional
+    @Override
+    public Equipo eliminarJugadores(Long equipoId, EquipoAddJugadoresDTO dto)
+    {
+
+        // 1. Encontrar el Equipo existente
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new RuntimeException("Equipo no encontrado"));
+
+        // 2. Encontrar los Jugadores (solo se necesitan sus referencias)
+        List<Jugador> jugadoresAAgregar = jugadorRepository.findAllById(dto.getJugadorIds());
+        List<Equipo> listaEquipos = equipoRepository.findAll();
+        if (jugadoresAAgregar.isEmpty()) {
+            throw new RuntimeException("Ningún jugador encontrado con los IDs proporcionados.");
+        }
+
+        for (Jugador jugador : jugadoresAAgregar) {
+            equipo.deleteJugador(jugador);
+        }
+
         return equipoRepository.save(equipo);
     }
 
@@ -340,7 +377,7 @@ public class EquipoServiceImp implements EquipoService {
         JugadorResponseDTO jugadorDTO = new JugadorResponseDTO();
         jugadorDTO.setId(j.getId());
         jugadorDTO.setCurp(j.getCurp());
-        jugadorDTO.setEstado(j.getEstado());
+        jugadorDTO.setInscrito(j.getInscrito());
         jugadorDTO.setFotoUrl(j.getFotoUrl());
         jugadorDTO.setFechaNacimiento(j.getFechaNacimiento());
 //        jugadorDTO.setUsuarioId(j.getId());

@@ -39,4 +39,9 @@ public class Equipo {
         this.jugadores.add(jugador);
         jugador.getEquipos().add(this); // Sincronizar el lado inverso
     }
+    public void deleteJugador(Jugador jugador)
+    {
+        this.jugadores.remove(jugador);
+        jugador.getEquipos().remove(this);
+    }
 }

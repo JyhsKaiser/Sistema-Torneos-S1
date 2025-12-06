@@ -19,7 +19,11 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long> {
 
     EquipoResponseDTO deleteEquipoById(Long id);
 
+    Optional<Equipo> findFirstByJugadoresId(Long jugadorId);
+
     // Busca todos los equipos que tienen un jugador con el id dado.
 // JPA sabe que debe unirse a la tabla 'equipo_jugadores' para encontrar la coincidencia.
     List<Equipo> findByJugadores_Id(Long jugadorId);
+
+    Equipo findEquipoByJugadores(Set<Jugador> jugadores);
 }

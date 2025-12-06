@@ -9,4 +9,8 @@ import java.util.Optional;
 @Repository
 public interface JugadorRepository extends JpaRepository<Jugador,Long> {
     Optional<Jugador> findById(Long id);
+
+    Jugador findJugadorsByCurp(String curp);
+
+//    Jugador findById(Long id);
 }

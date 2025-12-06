@@ -10,6 +10,9 @@ public interface NotificacionService {
     List<NotificacionResponseDTO> obtenerNotificacionesPorUsuarioId(Long usuarioId);
     NotificacionResponseDTO crearNotificacion(Long usuarioId, Notificacion notificacion);
     void eliminarNotificaciones();
+    void eliminarTodasLasNotificacionesDelUsuario(Long usuarioId);
+
+    NotificacionResponseDTO actualizarModificacion(Notificacion notificacion);
 //    NotificacionResponseDTO crearNotificacion(Notificacion notificacion, Long usuarioId);
 //    Notificacion crearNotificacion(Notificacion notificacion);
 }
